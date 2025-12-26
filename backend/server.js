@@ -103,7 +103,7 @@ app.delete('/api/admin/data/:id', async (req, res) => {
 
 // Root test route
 app.get('/', (req, res) => {
-  res.send('Ezpay Backend is Running');
+  res.send('PayBee Backend is Running');
 });
 
 /* ===========================
